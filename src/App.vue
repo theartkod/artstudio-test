@@ -1,28 +1,56 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png" />
-    <HelloWorld msg="Welcome to Your Vue.js App" />
+    <transition name="slide-fade">
+      <div class="aside-settings" v-if="currentOpenBlock">
+        <button class="aside-settings__close" @click="setCurrentEdit(null)">
+          x
+        </button>
+      </div>
+    </transition>
+    <div class="container">
+      <div
+        class="block-item"
+        :class="`block-item--${block.bColor}`"
+        v-for="block in blocks"
+      >
+        <button
+          tabindex="0"
+          @click="openSettings(block)"
+          class="block-item__button"
+        >
+          Настройки
+        </button>
+        <p
+          class="block-item__text"
+          contenteditable
+          @input="handeInput($event, block.blockID)"
+        >
+          {{ block.bText }}
+        </p>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
-import HelloWorld from "./components/HelloWorld.vue";
-
+import { mapState, mapMutations } from "vuex";
 export default {
   name: "app",
-  components: {
-    HelloWorld
+  computed: {
+    ...mapState(["blocks", "currentOpenBlock"])
+  },
+  methods: {
+    ...mapMutations(["setCurrentEdit", "updateText"]),
+    openSettings(block) {
+      this.setCurrentEdit(block);
+    },
+    handeInput(e, id) {
+      this.updateText({ id, newText: e.target.innerText });
+    }
   }
 };
 </script>
 
-<style>
-#app {
-  font-family: "Avenir", Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
+<style lang="postcss">
+@import "./assets/styles/main.pcss";
 </style>
