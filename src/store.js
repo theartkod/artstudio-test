@@ -1,6 +1,6 @@
 import Vue from "vue";
 import Vuex from "vuex";
-
+import { saveSettings } from "@/api/api";
 Vue.use(Vuex);
 
 export default new Vuex.Store({
@@ -19,7 +19,7 @@ export default new Vuex.Store({
             Name: "Ширина",
             stringType: "int",
             filedType: "input",
-            fieldValue: "600",
+            currentValue: "400",
             fieldSize: 4
           },
           {
@@ -27,7 +27,7 @@ export default new Vuex.Store({
             Name: "Высота",
             stringType: "int",
             filedType: "input",
-            fieldValue: "500",
+            currentValue: "500",
             fieldSize: 4
           }
         ]
@@ -40,19 +40,21 @@ export default new Vuex.Store({
           "Любая компания-производитель связывает с каждой своей новой моделью определенные надежды. Зачастую в связи с этим звучат громкие и красивые заявления - прорыв, революция, законодатель моды на ближайшее десятилетие... Но время тут - единственный по-настоящему объективный эксперт.",
         settings: [
           {
-            ID: 34,
-            Name: "Ширина",
-            stringType: "int",
-            filedType: "input",
-            fieldValue: "600",
-            fieldSize: 4
-          },
-          {
-            ID: 35,
-            Name: "Высота",
-            stringType: "int",
-            filedType: "input",
-            fieldValue: "500",
+            ID: 36,
+            Name: "Скрытое",
+            stringType: "str",
+            filedType: "select",
+            currentValue: false,
+            fieldValue: [
+              {
+                label: "Да",
+                value: true
+              },
+              {
+                label: "Нет",
+                value: false
+              }
+            ],
             fieldSize: 4
           }
         ]
@@ -63,13 +65,20 @@ export default new Vuex.Store({
     setCurrentEdit(state, block) {
       state.currentOpenBlock = block;
     },
-    updateText(state, { id, newText }) {
-      state.blocks.forEach(item => {
-        if (item.blockID === id) {
-          item.bText = newText;
+    updateSettings(state, settings) {
+      state.currentOpenBlock.settings.forEach((item, index) => {
+        if (settings.ID === item.ID) {
+          state.currentOpenBlock.settings.splice(index, 1, settings);
         }
       });
+    },
+    updateText(state, { id, newText }) {
+      state.blocks.find(item => item.blockID === id).bText = newText;
     }
   },
-  actions: {}
+  actions: {
+    async updateSettings({ state }) {
+      await saveSettings(state.blocks);
+    }
+  }
 });

@@ -9,6 +9,6 @@ import api from "@/config/axiosInst";
  * @returns {*}
  */
 
-export function registerPartnerUser(data) {
-  return api.get("save", data);
+export function saveSettings(data) {
+  return api.post("save", data);
 }

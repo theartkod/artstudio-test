@@ -1,11 +1,7 @@
 <template>
   <div id="app">
     <transition name="slide-fade">
-      <div class="aside-settings" v-if="currentOpenBlock">
-        <button class="aside-settings__close" @click="setCurrentEdit(null)">
-          x
-        </button>
-      </div>
+      <app-aside v-if="currentOpenBlock" />
     </transition>
     <div class="container">
       <div
@@ -28,14 +24,20 @@
           {{ block.bText }}
         </p>
       </div>
+      <button class="update" aria-label="Update" title="Выгрузить посты">
+        <img src="./assets/icons8-upload-to-the-cloud.svg" alt="cloud" />
+      </button>
     </div>
   </div>
 </template>
 
 <script>
-import { mapState, mapMutations } from "vuex";
+import { mapMutations, mapState } from "vuex";
+import AppAside from "@/components/AppAside";
+
 export default {
   name: "app",
+  components: { AppAside },
   computed: {
     ...mapState(["blocks", "currentOpenBlock"])
   },
