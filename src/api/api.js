@@ -10,5 +10,6 @@ import api from "@/config/axiosInst";
  */
 
 export function saveSettings(data) {
+  console.log('Send data', JSON.stringify(data));
   return api.post("save", data);
 }
